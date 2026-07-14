@@ -1,16 +1,39 @@
 const path = require('path');
 const fs = require('fs');
-const sqlite3 = require('sqlite3');
+
+let sqlite3;
+let sqliteLoadError;
+
+try {
+  sqlite3 = require('sqlite3');
+} catch (error) {
+  sqliteLoadError = error;
+}
 
 const dbPath = path.resolve(process.cwd(), process.env.DB_PATH || './data/residence.db');
-fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+let db;
 
-const db = new sqlite3.Database(dbPath);
-db.exec('PRAGMA foreign_keys = ON;');
+if (!sqliteLoadError) {
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+  db = new sqlite3.Database(dbPath);
+  db.exec('PRAGMA foreign_keys = ON;');
+}
+
+function getDatabaseOrThrow() {
+  if (sqliteLoadError) {
+    const message = `SQLite driver failed to load in this runtime: ${sqliteLoadError.message}`;
+    const error = new Error(message);
+    error.cause = sqliteLoadError;
+    throw error;
+  }
+
+  return db;
+}
 
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {
-    db.run(sql, params, function onRun(error) {
+    const database = getDatabaseOrThrow();
+    database.run(sql, params, function onRun(error) {
       if (error) {
         reject(error);
         return;
@@ -22,7 +45,8 @@ function run(sql, params = []) {
 
 function get(sql, params = []) {
   return new Promise((resolve, reject) => {
-    db.get(sql, params, (error, row) => {
+    const database = getDatabaseOrThrow();
+    database.get(sql, params, (error, row) => {
       if (error) {
         reject(error);
         return;
@@ -34,7 +58,8 @@ function get(sql, params = []) {
 
 function all(sql, params = []) {
   return new Promise((resolve, reject) => {
-    db.all(sql, params, (error, rows) => {
+    const database = getDatabaseOrThrow();
+    database.all(sql, params, (error, rows) => {
       if (error) {
         reject(error);
         return;
