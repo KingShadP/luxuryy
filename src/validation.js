@@ -1,10 +1,18 @@
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 function sanitizeText(value) {
   return String(value || '')
     .replace(/[\u0000-\u001F\u007F]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function isValidEmail(email) {
+  if (!email || email.length > 254) return false;
+  const atIndex = email.indexOf('@');
+  if (atIndex <= 0 || atIndex !== email.lastIndexOf('@')) return false;
+  const local = email.slice(0, atIndex);
+  const domain = email.slice(atIndex + 1);
+  if (!local || !domain || !domain.includes('.') || domain.startsWith('.') || domain.endsWith('.')) return false;
+  return true;
 }
 
 function validateSubmission(input = {}) {
@@ -18,7 +26,7 @@ function validateSubmission(input = {}) {
     throw new Error('Name must be between 2 and 120 characters.');
   }
 
-  if (!EMAIL_REGEX.test(email)) {
+  if (!isValidEmail(email)) {
     throw new Error('A valid email address is required.');
   }
 

@@ -10,7 +10,23 @@ const { generateIntelligence } = require('./gemini');
 function createApp() {
   const app = express();
 
-  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        connectSrc: ["'self'", 'https://generativelanguage.googleapis.com'],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+      },
+    },
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    crossOriginResourcePolicy: { policy: 'same-origin' },
+  }));
   app.use(express.json({ limit: '50kb' }));
   app.use(express.urlencoded({ extended: false }));
 
@@ -133,7 +149,7 @@ function createApp() {
   const staticPath = path.resolve(process.cwd(), 'kingshadp-residence');
   app.use(express.static(staticPath));
 
-  app.get('*', (req, res) => {
+  app.use((req, res) => {
     res.sendFile(path.join(staticPath, 'index.html'));
   });
 
