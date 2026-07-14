@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/kingshadp-residence/",
+      "permanent": false
+    }
+  ]
+}
