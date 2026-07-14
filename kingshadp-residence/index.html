@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<!-- KingShadP Residence v3.1 — Giragon corrected to user's vision -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KingShadP — The Residence</title>
+  <meta name="description" content="The private digital residence of KingShadP. Sound. Garments. Artifacts. Architecture. Every room bears the hand of KingShadP." />
+  <meta property="og:title" content="KingShadP — The Residence" />
+  <meta property="og:description" content="You are not entering a website. You are entering KingShadP's address." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════ */
+    :root {
+      --ivory:      #F4F0E8;
+      --porcelain:  #FBF9F4;
+      --oxblood:    #65000B;
+      --crimson:    #8A0F19;
+      --gold:       #B58A3B;
+      --brass:      #D3AE60;
+      --pale-gold:  #F5E6B0;
+      --bm:         #12100D;
+      --bm-mid:     #1A1610;
+      --bm-light:   #221E18;
+      --stone:      #C9C2B7;
+      --serif:      'Cormorant Garamond', Georgia, serif;
+      --sans:       'Inter', system-ui, sans-serif;
+      --script:     'Great Vibes', cursive;
+    }
+
+    /* ══════════════════════════════════════
+       RESET
+    ══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bm); color: var(--ivory); font-family: var(--sans); overflow-x: hidden; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 2px; }
+    ::-webkit-scrollbar-track { background: var(--bm); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+    /* ══════════════════════════════════════
+       UTILITIES
+    ══════════════════════════════════════ */
+    @keyframes goldFlow {
+      0%,100% { background-position: 200% 0; }
+      50%      { background-position: -200% 0; }
+    }
+    @keyframes goldGlow {
+      0%,100% { text-shadow: 0 0 20px rgba(213,174,96,.3), 0 0 60px rgba(181,138,59,.15); }
+      50%      { text-shadow: 0 0 40px rgba(213,174,96,.6), 0 0 100px rgba(181,138,59,.3); }
+    }
+    @keyframes haloSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    /* NOTE: Giragon SVG uses user-defined proportions only.
+       Long elegant neck (giraffe-like), horse/deer head,
+       bat wings from shoulders, four legs, curled tail, crown.
+       Do NOT generate AI dragon images for the Giragon. */
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    @keyframes loadBar {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+      20%,24%,55% { opacity: .4; }
+    }
+
+    .gold-gradient {
+      background: linear-gradient(105deg, #7A6030, #C09040 25%, var(--pale-gold) 50%, #C09040 75%, #7A6030);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: goldFlow 5s ease-in-out infinite;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(181,138,59,.3) 20%, var(--brass) 50%, rgba(181,138,59,.3) 80%, transparent);
+    }
+
+    .room-label {
+      display: flex; align-items: center; gap: 1rem;
+      font-family: var(--sans); font-size: .56rem; letter-spacing: .38em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2rem;
+    }
+    .room-label::before { content: ''; width: 32px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.v { opacity: 1; transform: none; }
+    .d1 { transition-delay: .12s; }
+    .d2 { transition-delay: .26s; }
+    .d3 { transition-delay: .42s; }
+    .d4 { transition-delay: .6s; }
+
+    /* ══════════════════════════════════════
+       KSP WORDMARK SVG INLINE COMPONENT
+       Crown + Script + Lightning
+    ══════════════════════════════════════ */
+    .ksp-wordmark-svg {
+      display: inline-block;
+      filter: drop-shadow(0 0 18px rgba(213,174,96,.4));
+      animation: goldGlow 4s ease-in-out infinite;
+    }
+    /* Used in nav: compact */
+    .ksp-wordmark-svg.compact { height: 36px; width: auto; }
+    /* Used in arrival: large */
+    .ksp-wordmark-svg.display { height: clamp(70px, 12vw, 130px); width: auto; }
+    /* Used in hero: medium */
+    .ksp-wordmark-svg.hero { height: clamp(48px, 7vw, 90px); width: auto; }
+
+    /* ══════════════════════════════════════
+       SP CREST SVG INLINE COMPONENT
+    ══════════════════════════════════════ */
+    .sp-crest-svg { display: inline-block; }
+
+    /* ══════════════════════════════════════
+       ARRIVAL SEQUENCE
+    ══════════════════════════════════════ */
+    #arrival {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bm);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+      transition: opacity .8s ease .2s;
+    }
+    #arrival.done { opacity: 0; pointer-events: none; }
+
+    .arrival-bg {
+      position: absolute; inset: 0;
+      background: url('assets/arrival_exterior.jpg') center 70% / cover no-repeat;
+      opacity: 0; transition: opacity 2s ease;
+    }
+    #arrival.show-bg .arrival-bg { opacity: 1; }
+    .arrival-darken {
+      position: absolute; inset: 0;
+      background: rgba(12,10,8,.72);
+    }
+
+    .arrival-corners {
+      position: absolute; inset: 2.5rem; pointer-events: none; z-index: 2;
+    }
+    .corner-tl, .corner-tr, .corner-bl, .corner-br {
+      position: absolute;
+      font-family: var(--sans); font-size: .52rem; letter-spacing: .3em;
+      text-transform: uppercase; color: rgba(181,138,59,.45); line-height: 2;
+    }
+    .corner-tl { top: 0; left: 0; }
+    .corner-tr { top: 0; right: 0; text-align: right; }
+    .corner-bl { bottom: 0; left: 0; }
+    .corner-br { bottom: 0; right: 0; text-align: right; }
+
+    /* Gold corner brackets */
+    .corner-tl::before, .corner-tr::before, .corner-bl::before, .corner-br::before {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+    }
+    .corner-tl::before { top: -8px; left: -8px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+    .corner-tr::before { top: -8px; right: -8px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+    .corner-bl::before { bottom: -8px; left: -8px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+    .corner-br::before { bottom: -8px; right: -8px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+
+    .arrival-center { position: relative; z-index: 3; text-align: center; }
+
+    .arrival-subtitle {
+      font-family: var(--sans); font-size: .58rem; letter-spacing: .5em;
+      text-transform: uppercase; color: rgba(181,138,59,.5);
+      margin-top: 1rem; margin-bottom: 3rem;
+    }
+    .arrival-bar-track {
+      width: 220px; height: 1px; background: rgba(181,138,59,.15);
+      position: relative; overflow: hidden; margin: 0 auto;
+    }
+    .arrival-bar-fill {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--pale-gold));
+      animation: loadBar 2.6s cubic-bezier(.4,0,.2,1) forwards;
+      animation-delay: .5s;
+    }
+
+    /* Door panels */
+    .door-l, .door-r {
+      position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2;
+      transition: transform 1.3s cubic-bezier(.76,0,.24,1);
+    }
+    .door-l { left: 0; background: var(--bm); }
+    .door-r { right: 0; background: var(--bm); }
+    .door-l::after {
+      content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--brass) 70%, transparent);
+    }
+    .door-r::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--brass) 70%, transparent);
+    }
+    #arrival.open .door-l { transform: translateX(-100%); }
+    #arrival.open .door-r { transform: translateX(100%); }
+
+    /* ══════════════════════════════════════
+       NAVIGATION
+    ══════════════════════════════════════ */
+    #nav {
+      position: fixed; top: 1.25rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: calc(100% - 3rem); max-width: 1480px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      background: rgba(12,10,8,.85);
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      border: 1px solid rgba(181,138,59,.2);
+      transition: all .5s ease;
+    }
+    #nav.scrolled { height: 50px; top: 1rem; }
+
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--sans); font-size: .6rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--stone);
+      transition: color .3s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+      transform: scaleX(0); transform-origin: left; transition: transform .3s;
+    }
+    .nav-links a:hover { color: var(--brass); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-cta {
+      font-family: var(--sans); font-size: .58rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--ivory);
+      background: var(--oxblood); border: 1px solid var(--gold);
+      padding: .65rem 1.4rem; cursor: pointer; white-space: nowrap;
+      display: inline-block; transition: all .35s ease;
+      position: relative; overflow: hidden;
+    }
+    .nav-cta::before {
+      content: ''; position: absolute; inset: 3px;
+      border: 1px solid rgba(181,138,59,.2); pointer-events: none;
+    }
+    .nav-cta:hover { background: var(--crimson); border-color: var(--brass); transform: translateY(-1px); }
+
+    /* ══════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════ */
+    .btn-primary {
+      font-family: var(--sans); font-size: .6rem; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--ivory);
+      background: var(--oxblood); border: 1px solid var(--gold);
+      padding: 1rem 2.5rem; cursor: pointer; display: inline-block;
+      position: relative; overflow: hidden; transition: all .4s ease;
+    }
+    .btn-primary::before { content: ''; position: absolute; inset: 4px; border: 1px solid rgba(181,138,59,.2); pointer-events: none; }
+    .btn-primary:hover { background: var(--crimson); border-color: var(--brass); transform: translateY(-2px); box-shadow: 0 16px 48px rgba(101,0,11,.5); }
+
+    .btn-secondary {
+      font-family: var(--sans); font-size: .6rem; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--stone);
+      background: transparent; border: 1px solid rgba(201,194,183,.25);
+      padding: 1rem 2.5rem; cursor: pointer; display: inline-block; transition: all .4s ease;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--brass); transform: translateY(-2px); }
+
+    .btn-ghost {
+      font-family: var(--sans); font-size: .6rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold);
+      background: transparent; border: 1px solid rgba(181,138,59,.4);
+      padding: .8rem 1.8rem; cursor: pointer; display: inline-block; transition: all .3s ease;
+    }
+    .btn-ghost:hover { background: rgba(181,138,59,.1); border-color: var(--brass); color: var(--brass); }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    #hero {
+      position: relative; height: 100vh; min-height: 720px;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; inset: -40px;
+      background: url('assets/hero.jpg') center center / cover no-repeat;
+      will-change: transform; transition: transform .12s ease-out;
+    }
+    .hero-grad {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(12,10,8,.55) 0%,
+        rgba(12,10,8,.12) 35%,
+        rgba(12,10,8,.45) 70%,
+        rgba(12,10,8,.96) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 2; text-align: center;
+      max-width: 1000px; padding: 0 2rem;
+    }
+    .hero-eyebrow {
+      font-family: var(--sans); font-size: .58rem; letter-spacing: .4em;
+      text-transform: uppercase; color: rgba(211,174,96,.7); margin-bottom: 2.5rem;
+    }
+    .hero-wordmark { margin: 0 auto 1rem; animation: float 8s ease-in-out infinite; }
+    .hero-headline {
+      font-family: var(--serif); font-size: clamp(4.5rem, 11vw, 10.5rem);
+      font-weight: 300; line-height: .88; text-transform: uppercase;
+      color: var(--ivory); letter-spacing: -.02em; margin-bottom: 2.5rem;
+    }
+    .hero-headline .italic-gold {
+      display: block; font-style: italic;
+    }
+    .hero-support {
+      font-family: var(--serif); font-size: clamp(.9rem, 1.4vw, 1.05rem);
+      font-weight: 300; line-height: 1.85;
+      color: rgba(244,240,232,.6); max-width: 560px; margin: 0 auto 3rem;
+    }
+    .hero-ctas { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; }
+    .hero-seal {
+      font-family: var(--sans); font-size: .5rem; letter-spacing: .38em;
+      text-transform: uppercase; color: rgba(181,138,59,.45); margin-top: 3rem;
+    }
+
+    /* ══════════════════════════════════════
+       OWNER'S DECLARATION
+    ══════════════════════════════════════ */
+    #declaration { background: var(--bm-mid); padding: 9rem 2rem; display: flex; align-items: center; justify-content: center; }
+    .decl-inner { max-width: 880px; width: 100%; }
+    .decl-quote {
+      font-family: var(--serif); font-size: clamp(1.7rem, 3.8vw, 3rem);
+      font-weight: 300; line-height: 1.55; color: var(--ivory); margin-bottom: 3rem;
+    }
+    .decl-quote strong { color: var(--oxblood); font-weight: 600; }
+    .decl-sub {
+      font-family: var(--serif); font-size: 1rem; font-weight: 300; font-style: italic;
+      line-height: 1.8; color: rgba(244,240,232,.45); margin-bottom: 3rem;
+    }
+    .decl-sig {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .decl-dash { font-family: var(--serif); color: var(--stone); font-size: 1rem; }
+    .decl-sig-mark { height: 60px; animation: float 7s ease-in-out infinite; }
+
+    /* ══════════════════════════════════════
+       COLLECTION — ROOM I
+    ══════════════════════════════════════ */
+    #collection { background: var(--bm); padding: 8rem 0; }
+    .col-header { text-align: center; padding: 0 2rem; margin-bottom: 5rem; }
+    .col-headline {
+      font-family: var(--serif); font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 300; line-height: .95; text-transform: uppercase; color: var(--ivory);
+    }
+    .col-headline em { font-style: italic; }
+    .col-panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .col-panel { position: relative; overflow: hidden; }
+    .panel-img { height: 700px; position: relative; overflow: hidden; }
+    .panel-img img { transition: transform .9s cubic-bezier(.4,0,.2,1); }
+    .col-panel:hover .panel-img img { transform: scale(1.06); }
+    .panel-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,10,8,.96) 0%, rgba(12,10,8,.3) 55%, transparent 100%); }
+    .panel-locked {
+      position: absolute; inset: 0;
+      background: rgba(12,10,8,.75); backdrop-filter: blur(12px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem;
+    }
+    .lock-halo { width: 56px; height: 56px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+    .lock-halo::before { content: ''; position: absolute; inset: -6px; border: 1px solid rgba(181,138,59,.2); border-radius: 50%; animation: haloSpin 12s linear infinite; }
+    .lock-halo svg { width: 22px; height: 22px; fill: var(--gold); }
+    .panel-locked p { font-family: var(--sans); font-size: .58rem; letter-spacing: .28em; text-transform: uppercase; color: var(--stone); }
+    .panel-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 2.5rem; }
+    .panel-room { font-family: var(--sans); font-size: .5rem; letter-spacing: .32em; text-transform: uppercase; color: var(--gold); margin-bottom: .6rem; }
+    .panel-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; color: var(--ivory); line-height: 1.15; margin-bottom: .5rem; }
+    .panel-meta { font-family: var(--sans); font-size: .58rem; letter-spacing: .08em; color: var(--stone); margin-bottom: 1rem; }
+    .panel-price { font-family: var(--serif); font-size: 1.15rem; color: var(--brass); margin-bottom: 1.5rem; }
+
+    /* ══════════════════════════════════════
+       GIRAGON ROTUNDA — THE HALL OF THE MARK
+    ══════════════════════════════════════ */
+    #rotunda {
+      position: relative; overflow: hidden; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rotunda-bg { position: absolute; inset: 0; background: url('assets/rotunda.jpg') center center / cover no-repeat; }
+    .rotunda-overlay { position: absolute; inset: 0; background: rgba(12,10,8,.65); }
+    .rotunda-content { position: relative; z-index: 2; text-align: center; padding: 8rem 2rem; max-width: 860px; }
+    .rotunda-hl {
+      font-family: var(--serif); font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 300; line-height: .9; text-transform: uppercase; color: var(--ivory); margin-bottom: 2rem;
+    }
+    .rotunda-hl em { display: block; font-style: italic; }
+    .rotunda-sub {
+      font-family: var(--serif); font-size: 1.05rem; font-weight: 300; font-style: italic;
+      line-height: 1.85; color: rgba(244,240,232,.6); max-width: 520px; margin: 0 auto 3rem;
+    }
+
+    /* ══════════════════════════════════════
+       LISTENING — ROOM II
+    ══════════════════════════════════════ */
+    #listening { position: relative; overflow: hidden; min-height: 100vh; display: flex; align-items: center; }
+    .listen-bg { position: absolute; inset: 0; background: url('assets/listening.jpg') center center / cover no-repeat; }
+    .listen-overlay { position: absolute; inset: 0; background: rgba(12,10,8,.82); }
+    .listen-inner {
+      position: relative; z-index: 2; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+      max-width: 1200px; margin: 0 auto; padding: 8rem 3rem;
+    }
+    .listen-hl { font-family: var(--serif); font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 300; line-height: .95; text-transform: uppercase; color: var(--ivory); margin-bottom: 1.5rem; }
+    .listen-hl em { display: block; font-style: italic; }
+    .listen-sup { font-family: var(--serif); font-size: 1rem; font-weight: 300; line-height: 1.85; color: rgba(244,240,232,.55); margin-bottom: 2.5rem; }
+    .listen-ctas { display: flex; flex-direction: column; gap: .8rem; align-items: flex-start; }
+    .audio-player { background: rgba(12,10,8,.92); border: 1px solid rgba(181,138,59,.22); padding: 2.5rem; }
+    .player-cover { width: 100%; aspect-ratio: 1; overflow: hidden; margin-bottom: 2rem; border: 1px solid rgba(181,138,59,.18); }
+    .now-label { font-family: var(--sans); font-size: .5rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: .4rem; }
+    .track-name { font-family: var(--serif); font-size: 1.25rem; color: var(--ivory); margin-bottom: 1.5rem; }
+    .prog-track { width: 100%; height: 1px; background: rgba(255,255,255,.08); position: relative; cursor: pointer; margin-bottom: .5rem; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, var(--oxblood), var(--gold)); width: 0%; transition: width .1s linear; position: relative; }
+    .prog-fill::after { content: ''; position: absolute; right: -5px; top: 50%; transform: translateY(-50%); width: 9px; height: 9px; background: var(--gold); border-radius: 50%; }
+    .time-row { display: flex; justify-content: space-between; font-family: var(--sans); font-size: .58rem; color: var(--stone); margin-bottom: 1.5rem; }
+    .player-controls { display: flex; align-items: center; gap: 1.5rem; justify-content: center; }
+    .ctrl { background: none; border: none; cursor: pointer; color: var(--stone); transition: color .3s; display: flex; align-items: center; }
+    .ctrl:hover { color: var(--gold); }
+    .ctrl.play { width: 48px; height: 48px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); }
+    .ctrl.play:hover { background: var(--oxblood); color: var(--ivory); }
+
+    /* ══════════════════════════════════════
+       GALLERY — ROOM III
+    ══════════════════════════════════════ */
+    #gallery { background: var(--bm-mid); padding: 8rem 0 4rem; }
+    .gallery-header { padding: 0 4rem; margin-bottom: 4rem; }
+    .gallery-hl { font-family: var(--serif); font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 300; line-height: .9; text-transform: uppercase; color: var(--ivory); }
+    .gallery-hl em { font-style: italic; }
+    .gallery-track {
+      display: flex; gap: 2rem; padding: 1rem 4rem 3rem;
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; cursor: grab; scrollbar-width: none;
+    }
+    .gallery-track::-webkit-scrollbar { display: none; }
+    .gallery-track:active { cursor: grabbing; }
+    .gframe {
+      flex: 0 0 360px; scroll-snap-align: start; position: relative;
+      border: 8px solid #0A0806;
+      box-shadow: 3px 3px 0 var(--gold), 0 20px 60px rgba(12,10,8,.6);
+      overflow: hidden; cursor: pointer;
+      transition: box-shadow .4s, transform .4s;
+    }
+    .gframe:hover { box-shadow: 3px 3px 0 var(--brass), 0 0 80px rgba(181,138,59,.25); transform: translateY(-4px); }
+    .gframe-img { height: 500px; overflow: hidden; }
+    .gframe-img img { transition: transform .7s ease; }
+    .gframe:hover .gframe-img img { transform: scale(1.05); }
+    .gframe-plaque {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(12,10,8,.98) 0%, transparent 100%);
+      padding: 3rem 1.5rem 1.5rem;
+      opacity: 0; transform: translateY(8px); transition: all .4s ease;
+    }
+    .gframe:hover .gframe-plaque { opacity: 1; transform: none; }
+    .gframe-title { font-family: var(--serif); font-size: 1.1rem; color: var(--ivory); margin-bottom: .3rem; }
+    .gframe-cap { font-family: var(--sans); font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+    .gallery-cta { text-align: center; padding: 3rem; }
+
+    /* ══════════════════════════════════════
+       OBJECTS & FRAGRANCE
+    ══════════════════════════════════════ */
+    #objects {
+      display: grid; grid-template-columns: 1fr 1fr; min-height: 85vh;
+      background: var(--bm);
+    }
+    .obj-img-side { position: relative; overflow: hidden; }
+    .obj-img-side img { height: 100%; min-height: 600px; }
+    .obj-img-grad { position: absolute; inset: 0; background: linear-gradient(to right, transparent 55%, var(--bm) 100%); }
+    .obj-copy-side { display: flex; align-items: center; padding: 5rem 4rem; }
+    .obj-inner { max-width: 480px; }
+    .obj-hl { font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.05; text-transform: uppercase; color: var(--ivory); margin-bottom: 1.5rem; }
+    .obj-hl em { font-style: italic; }
+    .obj-body { font-family: var(--serif); font-size: 1rem; font-weight: 300; line-height: 1.85; color: rgba(244,240,232,.55); margin-bottom: 2.5rem; }
+    .obj-detail { display: flex; flex-direction: column; gap: .7rem; margin-bottom: 2.5rem; }
+    .obj-detail-row { display: flex; justify-content: space-between; align-items: center; padding: .8rem 0; border-bottom: 1px solid rgba(181,138,59,.12); }
+    .obj-detail-label { font-family: var(--sans); font-size: .55rem; letter-spacing: .2em; text-transform: uppercase; color: var(--stone); }
+    .obj-detail-val { font-family: var(--serif); font-size: .95rem; color: var(--ivory); }
+
+    /* ══════════════════════════════════════
+       ARCHIVE — ROOM IV
+    ══════════════════════════════════════ */
+    #archive { position: relative; overflow: hidden; min-height: 100vh; }
+    .archive-bg { position: absolute; inset: 0; background: url('assets/archive.jpg') center center / cover no-repeat; filter: brightness(.25); }
+    .archive-inner { position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; padding: 10rem 3rem; }
+    .archive-hl { font-family: var(--serif); font-size: clamp(3rem, 7vw, 6rem); font-weight: 300; line-height: .95; text-transform: uppercase; color: var(--ivory); margin-bottom: 1.5rem; }
+    .archive-hl em { display: block; font-style: italic; }
+    .archive-sup { font-family: var(--serif); font-size: 1rem; font-weight: 300; line-height: 1.85; color: rgba(244,240,232,.55); margin-bottom: 4rem; max-width: 480px; }
+    .drawers { display: flex; flex-direction: column; gap: 2px; }
+    .drawer { border: 1px solid rgba(181,138,59,.15); overflow: hidden; }
+    .drawer-head {
+      display: flex; align-items: center; gap: 2rem; padding: 1.5rem 2rem;
+      background: rgba(12,10,8,.7); transition: background .3s; cursor: pointer; user-select: none;
+    }
+    .drawer-head:hover, .drawer.open .drawer-head { background: rgba(101,0,11,.5); }
+    .drawer-num { font-family: var(--sans); font-size: .55rem; letter-spacing: .22em; color: var(--gold); min-width: 34px; }
+    .drawer-t { font-family: var(--serif); font-size: 1.35rem; font-weight: 300; color: var(--ivory); flex: 1; }
+    .drawer-arrow { width: 26px; height: 26px; border: 1px solid rgba(181,138,59,.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform .4s, border-color .3s; }
+    .drawer.open .drawer-arrow { transform: rotate(180deg); border-color: var(--gold); }
+    .drawer-arrow svg { width: 10px; height: 10px; fill: var(--gold); }
+    .drawer-body { max-height: 0; overflow: hidden; transition: max-height .55s cubic-bezier(.4,0,.2,1); background: rgba(12,10,8,.6); }
+    .drawer.open .drawer-body { max-height: 160px; }
+    .drawer-body-inner { padding: 1.5rem 2rem 1.8rem calc(2rem + 34px + 2rem); font-family: var(--serif); font-size: .95rem; font-style: italic; color: rgba(244,240,232,.45); line-height: 1.85; }
+
+    /* ══════════════════════════════════════
+       STUDY
+    ══════════════════════════════════════ */
+    #study { position: relative; overflow: hidden; min-height: 100vh; display: flex; align-items: center; }
+    .study-bg { position: absolute; inset: 0; background: url('assets/study.jpg') center center / cover no-repeat; }
+    .study-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(12,10,8,.97) 0%, rgba(12,10,8,.9) 42%, rgba(12,10,8,.3) 70%, transparent 100%); }
+    .study-content { position: relative; z-index: 2; max-width: 560px; padding: 8rem 4rem; }
+    .study-hl { font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.05; text-transform: uppercase; color: var(--ivory); margin-bottom: 2rem; }
+    .study-hl em { display: block; font-style: italic; }
+    .study-bio { font-family: var(--serif); font-size: 1rem; font-weight: 300; line-height: 1.9; color: rgba(244,240,232,.55); margin-bottom: 3rem; }
+    .study-ctas { display: flex; flex-direction: column; gap: .8rem; align-items: flex-start; }
+
+    /* ══════════════════════════════════════
+       FEATURE
+    ══════════════════════════════════════ */
+    #feature {
+      position: relative; height: 88vh; min-height: 600px;
+      overflow: hidden; display: flex; align-items: flex-end;
+    }
+    .feature-bg { position: absolute; inset: -20px; background: url('assets/gallery2.jpg') center center / cover no-repeat; will-change: transform; }
+    .feature-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,10,8,.97) 0%, rgba(12,10,8,.4) 55%, transparent 100%); }
+    .feature-content { position: relative; z-index: 2; padding: 4rem; width: 100%; }
+    .feature-cur { font-family: var(--sans); font-size: .56rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .feature-hl { font-family: var(--serif); font-size: clamp(3rem, 7.5vw, 7rem); font-weight: 300; line-height: .88; text-transform: uppercase; color: var(--ivory); margin-bottom: 1.5rem; }
+    .feature-hl em { font-style: italic; }
+    .feature-stmt { font-family: var(--serif); font-size: 1.05rem; font-weight: 300; font-style: italic; color: rgba(244,240,232,.6); max-width: 480px; margin-bottom: 2.5rem; }
+    .feature-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .feature-stamp { position: absolute; top: 3rem; right: 3.5rem; text-align: right; z-index: 2; }
+    .stamp-l { font-family: var(--sans); font-size: .5rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(181,138,59,.45); display: block; line-height: 2.2; }
+
+    /* ══════════════════════════════════════
+       ACQUISITION
+    ══════════════════════════════════════ */
+    #acquisition { background: var(--bm-mid); padding: 10rem 2rem; }
+    .acq-inner { max-width: 680px; margin: 0 auto; }
+    .acq-hl { font-family: var(--serif); font-size: clamp(2.5rem, 6vw, 5.5rem); font-weight: 300; line-height: 1; text-transform: uppercase; color: var(--ivory); margin-bottom: 2rem; }
+    .acq-hl em { font-style: italic; }
+    .acq-sup { font-family: var(--serif); font-size: 1rem; font-weight: 300; line-height: 1.85; color: rgba(244,240,232,.5); margin-bottom: 3.5rem; }
+    .acq-form { display: flex; flex-direction: column; gap: 1.6rem; }
+    .acq-input {
+      width: 100%; background: transparent; border: none;
+      border-bottom: 1px solid rgba(244,240,232,.12);
+      padding: 1rem 0; font-family: var(--sans); font-size: .72rem;
+      letter-spacing: .08em; color: var(--ivory); outline: none; transition: border-color .3s;
+    }
+    .acq-input::placeholder { color: rgba(201,194,183,.3); letter-spacing: .25em; text-transform: uppercase; font-size: .56rem; }
+    .acq-input:focus { border-color: var(--gold); }
+    .int-label { font-family: var(--sans); font-size: .56rem; letter-spacing: .3em; text-transform: uppercase; color: var(--stone); display: block; margin-bottom: 1rem; }
+    .int-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+    .int-opt { display: flex; align-items: center; gap: .75rem; cursor: pointer; }
+    .int-opt input[type=checkbox] { width: 14px; height: 14px; appearance: none; border: 1px solid rgba(244,240,232,.18); cursor: pointer; position: relative; flex-shrink: 0; transition: border-color .3s; }
+    .int-opt input[type=checkbox]:checked { border-color: var(--gold); background: rgba(101,0,11,.8); }
+    .int-opt input[type=checkbox]:checked::after { content: ''; position: absolute; inset: 3px; background: var(--gold); }
+    .int-opt span { font-family: var(--sans); font-size: .6rem; letter-spacing: .15em; text-transform: uppercase; color: var(--stone); }
+    .btn-submit { font-family: var(--sans); font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--ivory); background: var(--oxblood); border: 1px solid var(--gold); padding: 1.2rem 3rem; cursor: pointer; width: 100%; transition: all .4s; margin-top: .5rem; }
+    .btn-submit:hover { background: var(--crimson); border-color: var(--brass); }
+    .form-confirm { display: none; text-align: center; padding: 3.5rem; border: 1px solid rgba(181,138,59,.18); }
+    .form-confirm.v { display: block; }
+    .confirm-msg { font-family: var(--serif); font-size: 1.3rem; font-style: italic; color: var(--ivory); margin-bottom: 1.2rem; line-height: 1.6; }
+    .confirm-sig-mark { height: 52px; margin: 0 auto; }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    #footer { background: var(--bm); border-top: 1px solid rgba(181,138,59,.15); padding: 5rem 4rem 3rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+    .footer-brand { display: flex; flex-direction: column; gap: 1rem; }
+    .footer-tag { font-family: var(--serif); font-size: .88rem; font-style: italic; color: rgba(201,194,183,.35); line-height: 1.85; }
+    .footer-col h4 { font-family: var(--sans); font-size: .5rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: .8rem; }
+    .footer-col a { font-family: var(--sans); font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--stone); transition: color .3s; }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom { border-top: 1px solid rgba(181,138,59,.08); padding-top: 2rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; }
+    .footer-final { font-family: var(--serif); font-size: .9rem; font-style: italic; color: rgba(201,194,183,.28); max-width: 520px; line-height: 1.75; }
+    .footer-copy { font-family: var(--sans); font-size: .52rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(201,194,183,.22); text-align: right; }
+
+    /* ══════════════════════════════════════
+       MOBILE
+    ══════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .col-panels { grid-template-columns: 1fr; }
+      .panel-img { height: 500px; }
+      .listen-inner { grid-template-columns: 1fr; gap: 3rem; padding: 6rem 2rem; }
+      #objects { grid-template-columns: 1fr; }
+      .obj-img-grad { background: linear-gradient(to bottom, transparent 55%, var(--bm) 100%); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 768px) {
+      #nav { padding: 0 1.5rem; width: calc(100% - 2rem); }
+      .hero-ctas { flex-direction: column; align-items: center; }
+      .gframe { flex: 0 0 290px; }
+      .gframe-img { height: 380px; }
+      .gallery-header, .gallery-track { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .study-content { padding: 5rem 2rem; max-width: 100%; }
+      .study-overlay { background: rgba(12,10,8,.92); }
+      .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      #footer { padding: 4rem 2rem 2.5rem; }
+      .feature-stamp { display: none; }
+      .int-grid { grid-template-columns: 1fr; }
+      .obj-copy-side { padding: 3rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       SVG DEFS: Reusable marks
+  ══════════════════════════════════════ -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Gold gradient for SVGs -->
+      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#7A6030"/>
+        <stop offset="30%"  stop-color="#C09040"/>
+        <stop offset="50%"  stop-color="#F5E6B0"/>
+        <stop offset="70%"  stop-color="#C09040"/>
+        <stop offset="100%" stop-color="#7A6030"/>
+      </linearGradient>
+      <linearGradient id="goldGradV" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stop-color="#F5E6B0"/>
+        <stop offset="50%"  stop-color="#B58A3B"/>
+        <stop offset="100%" stop-color="#7A6030"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+
+  <!-- ══════════════════════════════════════
+       GIRAGON EMBLEM — REUSABLE SVG SYMBOL
+       Correct proportions: long neck, horse head, wings, four legs
+  ══════════════════════════════════════ -->
+  <svg style="display:none" id="giragonnSvgDefs">
+    <symbol id="giragon-mark" viewBox="0 0 120 140">
+      <!-- Crown -->
+      <g fill="url(#goldGrad)">
+        <path d="M44 8 L44 2 L50 5 L56 0 L62 5 L68 2 L68 8 Z"/>
+        <rect x="42" y="7" width="28" height="4" rx="1"/>
+        <circle cx="44" cy="2" r="1.5"/>
+        <circle cx="56" cy="0" r="2"/>
+        <circle cx="68" cy="2" r="1.5"/>
+      </g>
+      <!-- Very long elegant neck — giraffe proportions -->
+      <path d="M50 12 C48 18, 46 30, 45 46 C44 54, 43 60, 44 66" 
+            fill="url(#goldGrad)" stroke="none"/>
+      <path d="M58 12 C60 18, 62 30, 63 46 C64 54, 64 60, 63 66"
+            fill="url(#goldGrad)" stroke="none"/>
+      <!-- Neck fill -->
+      <path d="M50 12 C48 18, 46 30, 45 46 C44 54, 43 60, 44 66 
+               L63 66 C64 60, 64 54, 63 46 C62 30, 60 18, 58 12 Z"
+            fill="url(#goldGrad)" opacity=".95"/>
+      <!-- Neck scale texture -->
+      <path d="M50 22 C52 21, 56 21, 58 22 M49 30 C52 28, 56 28, 59 30 M48 38 C51 36, 57 36, 60 38" 
+            stroke="#D3AE60" stroke-width=".5" fill="none" opacity=".5"/>
+      <!-- Small elegant horse/deer head -->
+      <ellipse cx="54" cy="10" rx="8" ry="6" fill="url(#goldGrad)"/>
+      <!-- Snout — refined, not a dragon snout -->
+      <path d="M60 9 Q67 8 68 11 Q67 14 60 13 Z" fill="url(#goldGrad)"/>
+      <!-- Eye -->
+      <circle cx="61" cy="9" r="1.2" fill="#0A0806"/>
+      <circle cx="61.5" cy="8.5" r=".4" fill="#D3AE60"/>
+      <!-- Ear -->
+      <path d="M48 6 L45 2 L50 5 Z" fill="url(#goldGrad)"/>
+      <!-- Body — lean and four-legged -->
+      <path d="M44 66 C42 72, 40 82, 40 92 C40 100, 42 106, 44 110 
+               L76 110 C78 106, 80 100, 80 92 C80 82, 78 72, 76 66 Z"
+            fill="url(#goldGrad)" opacity=".92"/>
+      <!-- Body filigree / scroll texture -->
+      <path d="M48 76 C52 73, 58 73, 62 76 M47 84 C51 81, 59 81, 63 84 M48 92 C52 89, 58 89, 62 92"
+            stroke="#D3AE60" stroke-width=".6" fill="none" opacity=".4"/>
+      <!-- LEFT WING — bat wing from shoulder -->
+      <path d="M44 68 C34 60, 18 55, 10 45 C16 50, 20 58, 26 66 
+               C16 65, 8 72, 6 80 C14 74, 22 72, 30 74 
+               C22 80, 18 88, 20 96 C26 86, 34 80, 42 78 Z"
+            fill="url(#goldGrad)" opacity=".88"/>
+      <!-- Left wing membrane lines -->
+      <path d="M42 70 L14 50 M40 74 L12 68 M40 78 L18 90"
+            stroke="#C09040" stroke-width=".6" fill="none" opacity=".5"/>
+      <!-- RIGHT WING — bat wing from shoulder -->
+      <path d="M76 68 C86 60, 102 55, 110 45 C104 50, 100 58, 94 66
+               C104 65, 112 72, 114 80 C106 74, 98 72, 90 74
+               C98 80, 102 88, 100 96 C94 86, 86 80, 78 78 Z"
+            fill="url(#goldGrad)" opacity=".88"/>
+      <!-- Right wing membrane lines -->
+      <path d="M78 70 L106 50 M80 74 L108 68 M80 78 L102 90"
+            stroke="#C09040" stroke-width=".6" fill="none" opacity=".5"/>
+      <!-- FOUR LEGS -->
+      <g fill="url(#goldGrad)">
+        <!-- Front left -->
+        <rect x="46" y="108" width="7" height="22" rx="2"/>
+        <ellipse cx="49.5" cy="131" rx="5" ry="2"/>
+        <!-- Front right -->
+        <rect x="58" y="108" width="7" height="22" rx="2"/>
+        <ellipse cx="61.5" cy="131" rx="5" ry="2"/>
+        <!-- Rear left -->
+        <rect x="48" y="106" width="7" height="20" rx="2" transform="rotate(4,51,116)"/>
+        <!-- Rear right -->
+        <rect x="62" y="106" width="7" height="20" rx="2" transform="rotate(-4,65,116)"/>
+      </g>
+      <!-- CURLED TAIL -->
+      <path d="M76 100 C84 102, 90 108, 88 116 C86 122, 80 124, 76 120 C80 118, 83 115, 82 111 C81 107, 77 106, 75 108"
+            fill="none" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <!-- ══════════════════════════════════════
+       ARRIVAL SEQUENCE
+  ══════════════════════════════════════ -->
+  <div id="arrival" role="presentation" aria-hidden="true">
+    <div class="arrival-bg"></div>
+    <div class="arrival-darken"></div>
+    <div class="door-l"></div>
+    <div class="door-r"></div>
+
+    <div class="arrival-corners">
+      <div class="corner-tl">Private Residence<br/>Honolulu · Miami · The World</div>
+      <div class="corner-tr">Access Status: Granted<br/>Established by KingShadP</div>
+      <div class="corner-bl">Sound · Garments · Architecture</div>
+      <div class="corner-br">© 2026 KingShadP</div>
+    </div>
+
+    <div class="arrival-center">
+      <!--
+      GIRAGON EMBLEM SVG — KingShadP's original creature:
+      · Long, slender giraffe-like neck
+      · Small horse/deer head (NOT a dragon/griffin)
+      · Bat wings extending from the back/shoulders
+      · Four legs, curled tail
+      · Crown on head
+      · Filigree arabesque engraving texture
+      This SVG approximates those proportions for use as a logo mark.
+      For photographic use, replace asset images with owner-provided photos.
+    -->
+    <!-- KingShadP Wordmark SVG: Crown + Script + Lightning -->
+      <svg class="ksp-wordmark-svg display" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="KingShadP">
+        <!-- Crown above K -->
+        <g transform="translate(28, 0)">
+          <path d="M4 28 L4 14 L14 22 L24 8 L34 22 L44 14 L44 28 Z" fill="url(#goldGrad)" stroke="none"/>
+          <rect x="2" y="26" width="44" height="4" rx="1" fill="url(#goldGrad)"/>
+          <circle cx="4"  cy="14" r="2" fill="url(#goldGrad)"/>
+          <circle cx="24" cy="8"  r="2.5" fill="url(#goldGrad)"/>
+          <circle cx="44" cy="14" r="2" fill="url(#goldGrad)"/>
+        </g>
+        <!-- Script "KingShadP" text -->
+        <text x="10" y="130" font-family="Great Vibes, Dancing Script, cursive" font-size="120" fill="url(#goldGrad)" letter-spacing="-2">KingShadP</text>
+        <!-- Underline swoosh with lightning bolt -->
+        <path d="M10 148 Q200 156 490 144" stroke="url(#goldGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Lightning bolt at end -->
+        <path d="M482 138 L494 148 L486 148 L498 162" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <p class="arrival-subtitle">The Residence</p>
+      <div class="arrival-bar-track" role="progressbar" aria-label="Loading">
+        <div class="arrival-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════ -->
+  <nav id="nav" role="navigation" aria-label="Main Navigation">
+
+    <!-- Wordmark SVG in nav -->
+    <a href="#hero" aria-label="KingShadP — Home">
+      <svg class="ksp-wordmark-svg compact" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(28, 0)">
+          <path d="M4 28 L4 14 L14 22 L24 8 L34 22 L44 14 L44 28 Z" fill="url(#goldGrad)"/>
+          <rect x="2" y="26" width="44" height="4" rx="1" fill="url(#goldGrad)"/>
+          <circle cx="4" cy="14" r="2" fill="url(#goldGrad)"/>
+          <circle cx="24" cy="8" r="2.5" fill="url(#goldGrad)"/>
+          <circle cx="44" cy="14" r="2" fill="url(#goldGrad)"/>
+        </g>
+        <text x="10" y="130" font-family="Great Vibes, cursive" font-size="120" fill="url(#goldGrad)" letter-spacing="-2">KingShadP</text>
+        <path d="M10 148 Q200 156 490 144" stroke="url(#goldGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M482 138 L494 148 L486 148 L498 162" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#listening">Sound</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#objects">Objects</a></li>
+      <li><a href="#archive">Archive</a></li>
+      <li><a href="#study">Owner</a></li>
+    </ul>
+
+    <!-- SP Crest in center of nav -->
+    <svg class="sp-crest-svg" width="38" height="46" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="KingShadP SP Crest">
+      <!-- Fleur-de-lis crown -->
+      <g fill="url(#goldGrad)">
+        <path d="M40 2 C40 2, 36 10, 40 14 C44 10, 40 2, 40 2Z"/>
+        <path d="M22 8 C22 8, 19 16, 24 20 C29 16, 26 8, 22 8Z"/>
+        <path d="M58 8 C58 8, 55 16, 60 20 C65 16, 62 8, 58 8Z"/>
+        <rect x="16" y="18" width="48" height="6" rx="2"/>
+        <rect x="12" y="22" width="56" height="4" rx="1"/>
+      </g>
+      <!-- Shield body -->
+      <path d="M8 28 H72 V68 C72 78, 40 92, 40 92 C40 92, 8 78, 8 68 Z" fill="#0A0806" stroke="url(#goldGrad)" stroke-width="2"/>
+      <!-- Inner shield border -->
+      <path d="M13 32 H67 V67 C67 76, 40 88, 40 88 C40 88, 13 76, 13 67 Z" fill="none" stroke="rgba(181,138,59,0.3)" stroke-width="1"/>
+      <!-- Intertwined SP monogram -->
+      <text x="14" y="74" font-family="Cormorant Garamond, serif" font-size="44" font-style="italic" font-weight="600" fill="url(#goldGrad)" letter-spacing="-4">SP</text>
+      <!-- Fleur at bottom -->
+      <path d="M40 84 L37 80 L40 82 L43 80 Z" fill="url(#goldGrad)"/>
+    </svg>
+
+    <a href="#acquisition" class="nav-cta" id="nav-cta-btn">Enter the Private Room</a>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════
+       HERO
+  ══════════════════════════════════════ -->
+  <section id="hero" aria-label="The Grand Salon — KingShadP Residence">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-grad"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">The Private World of KingShadP</p>
+
+      <!-- Medium wordmark floating above headline -->
+      <div class="hero-wordmark reveal d1">
+        <svg class="ksp-wordmark-svg hero" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(28, 0)">
+            <path d="M4 28 L4 14 L14 22 L24 8 L34 22 L44 14 L44 28 Z" fill="url(#goldGrad)"/>
+            <rect x="2" y="26" width="44" height="4" rx="1" fill="url(#goldGrad)"/>
+            <circle cx="4" cy="14" r="2" fill="url(#goldGrad)"/>
+            <circle cx="24" cy="8" r="2.5" fill="url(#goldGrad)"/>
+            <circle cx="44" cy="14" r="2" fill="url(#goldGrad)"/>
+          </g>
+          <text x="10" y="130" font-family="Great Vibes, cursive" font-size="120" fill="url(#goldGrad)" letter-spacing="-2">KingShadP</text>
+          <path d="M10 148 Q200 156 490 144" stroke="url(#goldGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M482 138 L494 148 L486 148 L498 162" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h1 class="hero-headline reveal d2">
+        This Place
+        <span class="italic-gold gold-gradient">Has an Owner.</span>
+      </h1>
+
+      <p class="hero-support reveal d3">
+        KingShadP is not presented here inside someone else's platform.
+        This is the address — an authored environment for sound, garments, imagery,
+        objects, and everything bearing the signature of KingShadP.
+      </p>
+
+      <div class="hero-ctas reveal d3">
+        <a href="#collection" class="btn-primary" id="hero-enter-btn">Enter the Residence</a>
+        <a href="#objects" class="btn-secondary" id="hero-view-btn">View the Latest Acquisition</a>
+      </div>
+
+      <p class="hero-seal reveal d4">Designed · Directed · Signed · KingShadP</p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       OWNER'S DECLARATION
+  ══════════════════════════════════════ -->
+  <section id="declaration" aria-label="Owner's Declaration">
+    <div class="decl-inner">
+      <p class="decl-quote reveal">
+        This is not a mood board.<br/>
+        This is not borrowed status.<br/>
+        This is not another storefront asking for<br/>
+        permission to appear important.<br/><br/>
+        <strong>This is KingShadP's place.</strong>
+      </p>
+      <p class="decl-sub reveal d1">
+        Every object has a position. Every mark has a history.
+        Every room leads deeper into the work.
+      </p>
+      <div class="decl-sig reveal d2">
+        <span class="decl-dash">—</span>
+        <svg class="decl-sig-mark" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="KingShadP signature">
+          <g transform="translate(28, 0)">
+            <path d="M4 28 L4 14 L14 22 L24 8 L34 22 L44 14 L44 28 Z" fill="url(#goldGrad)"/>
+            <rect x="2" y="26" width="44" height="4" rx="1" fill="url(#goldGrad)"/>
+            <circle cx="4" cy="14" r="2" fill="url(#goldGrad)"/>
+            <circle cx="24" cy="8" r="2.5" fill="url(#goldGrad)"/>
+            <circle cx="44" cy="14" r="2" fill="url(#goldGrad)"/>
+          </g>
+          <text x="10" y="130" font-family="Great Vibes, cursive" font-size="120" fill="url(#goldGrad)" letter-spacing="-2">KingShadP</text>
+          <path d="M10 148 Q200 156 490 144" stroke="url(#goldGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M482 138 L494 148 L486 148 L498 162" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       COLLECTION — ROOM I
+  ══════════════════════════════════════ -->
+  <section id="collection" aria-label="Room I: The Collection">
+    <div class="col-header reveal">
+      <div class="room-label" style="justify-content:center;">Room I · The Collection</div>
+      <h2 class="col-headline">Garments That Belong<br/><em class="gold-gradient">To the House.</em></h2>
+    </div>
+
+    <div class="col-panels">
+      <div class="col-panel reveal">
+        <div class="panel-img">
+          <img src="assets/collection1.jpg" alt="The Signature Series — KingShadP Grand Coat" loading="lazy"/>
+          <div class="panel-grad"></div>
+        </div>
+        <div class="panel-info">
+          <p class="panel-room">The Signature Series</p>
+          <h3 class="panel-title">The Grand Coat<br/>No. 001</h3>
+          <p class="panel-meta">Virgin Wool · Antique Gold Embroidery · Ivory Silk Lining</p>
+          <p class="panel-price">$3,200</p>
+          <a href="#acquisition" class="btn-primary" id="col-p1-btn">Acquire the Piece</a>
+        </div>
+      </div>
+
+      <div class="col-panel reveal d1">
+        <div class="panel-img">
+          <img src="assets/collection2.jpg" alt="The Giragon Collection" loading="lazy"/>
+          <div class="panel-grad"></div>
+        </div>
+        <div class="panel-info">
+          <p class="panel-room">The Giragon Collection</p>
+          <h3 class="panel-title">Giragon<br/>Embroidered Study</h3>
+          <p class="panel-meta">Oxblood Velvet · Hand-Worked Gold Thread · Edition IV</p>
+          <p class="panel-price">$2,800</p>
+          <a href="#acquisition" class="btn-primary" id="col-p2-btn">Place in Acquisition</a>
+        </div>
+      </div>
+
+      <div class="col-panel reveal d2">
+        <div class="panel-img">
+          <img src="assets/gallery1.jpg" alt="Private Release" loading="lazy"/>
+          <div class="panel-grad"></div>
+          <div class="panel-locked">
+            <div class="lock-halo">
+              <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            </div>
+            <p>Private Release</p>
+            <a href="#acquisition" class="btn-ghost" id="col-p3-btn">Request Entry</a>
+          </div>
+        </div>
+        <div class="panel-info">
+          <p class="panel-room">Private Releases</p>
+          <h3 class="panel-title">Newly Entered<br/>· Restricted ·</h3>
+          <p class="panel-meta">Access required · Limited to correspondents of the residence</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       GIRAGON ROTUNDA — The Hall of the Mark
+       Background: rotunda.jpg (user's actual Giragon statue)
+  ══════════════════════════════════════ -->
+  <section id="rotunda" aria-label="The Giragon — Hall of the Mark">
+    <div class="rotunda-bg"></div>
+    <div class="rotunda-overlay"></div>
+    <div class="rotunda-content">
+      <!-- Giragon SVG mark — correct proportions: long neck, horse head, wings, four legs -->
+      <svg style="width:80px;height:auto;margin:0 auto 2rem;display:block;
+                  filter:drop-shadow(0 0 18px rgba(213,174,96,.5));"
+           viewBox="0 0 120 140" fill="none" aria-label="The Giragon" class="reveal">
+        <use href="#giragon-mark"/>
+      </svg>
+      <div class="room-label reveal" style="justify-content:center; color:var(--gold);">The Giragon · House Emblem of KingShadP</div>
+      <h2 class="rotunda-hl reveal d1">
+        The Mark That
+        <em class="gold-gradient">Owns the Room.</em>
+      </h2>
+      <p class="rotunda-sub reveal d2">
+        The Giragon stands at the center of every room KingShadP inhabits.
+        Crowned. Winged. Engraved in gold. It does not ask permission to exist.
+        Neither does KingShadP.
+      </p>
+      <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;" class="reveal d3">
+        <a href="#archive" class="btn-primary" id="rotunda-archive-btn">Enter the Giragon Archive</a>
+        <a href="#objects" class="btn-secondary" id="rotunda-objects-btn">View Objects</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       LISTENING — ROOM II
+  ══════════════════════════════════════ -->
+  <section id="listening" aria-label="Room II: The Listening Room">
+    <div class="listen-bg"></div>
+    <div class="listen-overlay"></div>
+    <div class="listen-inner">
+      <div>
+        <div class="room-label reveal">Room II · The Listening Room</div>
+        <h2 class="listen-hl reveal d1">The House<em class="gold-gradient">Has a Sound.</em></h2>
+        <p class="listen-sup reveal d2">
+          Enter the catalog, hear current releases, inspect lyrics, and experience
+          the recordings within the environment they were created in.
+        </p>
+        <div class="listen-ctas reveal d3">
+          <a href="#acquisition" class="btn-primary" id="listen-full-btn">Listen Inside the Residence</a>
+          <a href="#archive" class="btn-secondary" id="listen-cat-btn">Open the Full Catalog</a>
+          <a href="#archive" class="btn-secondary" id="listen-lyr-btn">Read the Lyrics</a>
+        </div>
+      </div>
+
+      <div class="audio-player reveal d2">
+        <div class="player-cover">
+          <img src="assets/listening.jpg" alt="KingShadP — Current Release" loading="lazy"/>
+        </div>
+        <p class="now-label">Now Playing</p>
+        <p class="track-name">KingShadP — The Residence</p>
+        <div class="prog-track" id="progBar" role="slider" aria-label="Track progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="prog-fill" id="progFill"></div>
+        </div>
+        <div class="time-row">
+          <span id="elapsed">00:00</span>
+          <span>03:41</span>
+        </div>
+        <div class="player-controls">
+          <button class="ctrl" id="prevBtn" aria-label="Previous track">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+          </button>
+          <button class="ctrl play" id="playBtn" aria-label="Play">
+            <svg id="playIco" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pauseIco" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <button class="ctrl" id="nextBtn" aria-label="Next track">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       GALLERY — ROOM III
+  ══════════════════════════════════════ -->
+  <section id="gallery" aria-label="Room III: The Portrait Gallery">
+    <div class="gallery-header">
+      <div class="room-label reveal">Room III · The Gallery</div>
+      <h2 class="gallery-hl reveal d1">Proof of <em class="gold-gradient">Presence.</em></h2>
+    </div>
+
+    <div class="gallery-track" id="galleryTrack" role="list">
+      <div class="gframe" role="listitem">
+        <div class="gframe-img"><img src="assets/gallery1.jpg" alt="The Owner's Portrait" loading="lazy"/></div>
+        <div class="gframe-plaque"><p class="gframe-title">The Owner's Portrait</p><p class="gframe-cap">Portrait · The Residence · 2026</p></div>
+      </div>
+      <div class="gframe" role="listitem">
+        <div class="gframe-img"><img src="assets/hero.jpg" alt="Grand Salon Interior" loading="lazy"/></div>
+        <div class="gframe-plaque"><p class="gframe-title">The Grand Salon</p><p class="gframe-cap">Residence Interior · Behind the House</p></div>
+      </div>
+      <div class="gframe" role="listitem">
+        <div class="gframe-img"><img src="assets/rotunda.jpg" alt="Hall of the Mark" loading="lazy"/></div>
+        <div class="gframe-plaque"><p class="gframe-title">Hall of the Mark</p><p class="gframe-cap">The Giragon Rotunda · 2026</p></div>
+      </div>
+      <div class="gframe" role="listitem">
+        <div class="gframe-img"><img src="assets/gallery2.jpg" alt="Editorial: The Columns" loading="lazy"/></div>
+        <div class="gframe-plaque"><p class="gframe-title">Editorial: The Columns</p><p class="gframe-cap">Campaign Film Still · 2026</p></div>
+      </div>
+      <div class="gframe" role="listitem">
+        <div class="gframe-img"><img src="assets/lounge.jpg" alt="The Dark Lounge" loading="lazy"/></div>
+        <div class="gframe-plaque"><p class="gframe-title">The Private Lounge</p><p class="gframe-cap">Residence Interior · Night · 2026</p></div>
+      </div>
+      <div class="gframe" role="listitem">
+        <div class="gframe-img"><img src="assets/arrival_exterior.jpg" alt="The Residence Exterior" loading="lazy"/></div>
+        <div class="gframe-plaque"><p class="gframe-title">The Residence Exterior</p><p class="gframe-cap">Private Address · Night · 2026</p></div>
+      </div>
+    </div>
+
+    <div class="gallery-cta reveal">
+      <a href="#archive" class="btn-primary" id="gallery-full-btn">Walk the Full Gallery</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       OBJECTS & FRAGRANCE
+  ══════════════════════════════════════ -->
+  <section id="objects" aria-label="Objects — Fragrance and Artifacts">
+    <div class="obj-img-side">
+      <img src="assets/fragrance.jpg" alt="KingShadP — The Fragrance" loading="lazy"/>
+      <div class="obj-img-grad"></div>
+    </div>
+    <div class="obj-copy-side">
+      <div class="obj-inner">
+        <div class="room-label reveal">Objects · The Residence</div>
+        <h2 class="obj-hl reveal d1">The Scent of<br/><em class="gold-gradient">The House.</em></h2>
+        <p class="obj-body reveal d2">
+          Every room of the residence carries a particular atmosphere. This fragrance was
+          composed from the interior — dark marble, oxblood velvet, aged wood, amber light,
+          and something that has no other name.
+        </p>
+        <div class="obj-detail reveal d2">
+          <div class="obj-detail-row">
+            <span class="obj-detail-label">Name</span>
+            <span class="obj-detail-val">KingShadP — No. 001</span>
+          </div>
+          <div class="obj-detail-row">
+            <span class="obj-detail-label">Type</span>
+            <span class="obj-detail-val">Eau de Parfum</span>
+          </div>
+          <div class="obj-detail-row">
+            <span class="obj-detail-label">Edition</span>
+            <span class="obj-detail-val">100ml · Limited</span>
+          </div>
+          <div class="obj-detail-row">
+            <span class="obj-detail-label">Mark</span>
+            <span class="obj-detail-val">SP Crest · Giragon</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:.8rem; flex-wrap:wrap;" class="reveal d3">
+          <a href="#acquisition" class="btn-primary" id="obj-acq-btn">Acquire the Fragrance</a>
+          <a href="#archive" class="btn-ghost" id="obj-arch-btn">View All Objects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       ARCHIVE — ROOM IV
+  ══════════════════════════════════════ -->
+  <section id="archive" aria-label="Room IV: The Divine Archive">
+    <div class="archive-bg"></div>
+    <div class="archive-inner">
+      <div class="room-label reveal">Room IV · The Divine Archive</div>
+      <h2 class="archive-hl reveal d1">Nothing Important<em>Is Discarded.</em></h2>
+      <p class="archive-sup reveal d2">
+        Music, garments, documents, unfinished concepts, private mythology, 
+        campaign records, and objects preserved as evidence of an expanding body of work.
+      </p>
+
+      <div class="drawers">
+        <div class="drawer reveal" id="dr001">
+          <div class="drawer-head" onclick="toggleDrawer('dr001')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">001</span><span class="drawer-t">Origin</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">The documented beginning — early works, founding concepts, and the first marks that defined the authorship. Every house has a foundation.</div></div>
+        </div>
+        <div class="drawer reveal d1" id="dr002">
+          <div class="drawer-head" onclick="toggleDrawer('dr002')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">002</span><span class="drawer-t">Sound</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">The complete recorded catalog — released works, unreleased sessions, instrumental studies, and voice recordings spanning the full history of KingShadP's sonic authorship.</div></div>
+        </div>
+        <div class="drawer reveal d2" id="dr003">
+          <div class="drawer-head" onclick="toggleDrawer('dr003')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">003</span><span class="drawer-t">Garments</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">Every piece that has left this house — campaign photographs, technical specifications, material records, and acquisition histories by edition number.</div></div>
+        </div>
+        <div class="drawer reveal d3" id="dr004">
+          <div class="drawer-head" onclick="toggleDrawer('dr004')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">004</span><span class="drawer-t">The Giragon</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">The mythology, mark studies, emblem history, and all documented incarnations of the Giragon across disciplines and time periods.</div></div>
+        </div>
+        <div class="drawer reveal" id="dr005">
+          <div class="drawer-head" onclick="toggleDrawer('dr005')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">005</span><span class="drawer-t">Films</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">Campaign films, music videos, editorial footage, and behind-the-house documentation. Moving images produced under this authorship.</div></div>
+        </div>
+        <div class="drawer reveal d1" id="dr006">
+          <div class="drawer-head" onclick="toggleDrawer('dr006')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">006</span><span class="drawer-t">Writings</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">Lyrics, notes, private correspondence, published statements, and the written record of an expanding body of thought.</div></div>
+        </div>
+        <div class="drawer reveal d2" id="dr007">
+          <div class="drawer-head" onclick="toggleDrawer('dr007')" role="button" aria-expanded="false" tabindex="0">
+            <span class="drawer-num">007</span><span class="drawer-t">Unreleased</span>
+            <div class="drawer-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
+          </div>
+          <div class="drawer-body"><div class="drawer-body-inner">Access to this chamber requires residence correspondence. Contents include works not yet authorized for public entry.</div></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 3rem;" class="reveal d3">
+        <a href="#acquisition" class="btn-primary" id="archive-enter-btn">Enter the Archive</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       STUDY
+  ══════════════════════════════════════ -->
+  <section id="study" aria-label="The Owner's Study">
+    <div class="study-bg"></div>
+    <div class="study-overlay"></div>
+    <div class="study-content">
+      <div class="room-label reveal">The Owner</div>
+      <h2 class="study-hl reveal d1">
+        KingShadP Does Not
+        <em class="gold-gradient">Visit This World.</em>
+        He Built It.
+      </h2>
+      <p class="study-bio reveal d2">
+        KingShadP is a multidisciplinary artist working across music, visual identity,
+        garments, narrative, and digital architecture. Every discipline operates under
+        one authorship and one evolving archive.
+        <br/><br/>
+        This residence is the central record of that work.
+      </p>
+      <div class="study-ctas reveal d3">
+        <a href="#acquisition" class="btn-primary" id="study-story-btn">Read the Owner's Story</a>
+        <a href="#acquisition" class="btn-ghost" id="study-press-btn">Open the Press Dossier</a>
+        <a href="#acquisition" class="btn-ghost" id="study-access-btn">Request Professional Access</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       CURRENT FEATURE
+  ══════════════════════════════════════ -->
+  <section id="feature" aria-label="Currently Inside the House">
+    <div class="feature-bg" id="featureBg"></div>
+    <div class="feature-overlay"></div>
+    <div class="feature-stamp">
+      <span class="stamp-l">KSP / 2026</span>
+      <span class="stamp-l">Authorized Release</span>
+    </div>
+    <div class="feature-content">
+      <p class="feature-cur reveal">Currently Inside the House</p>
+      <h2 class="feature-hl reveal d1">The Columns<br/><em class="gold-gradient">Campaign</em></h2>
+      <p class="feature-stmt reveal d2">Filmed across private interiors and public monuments. An editorial document of presence and architecture.</p>
+      <div class="feature-ctas reveal d3">
+        <a href="#acquisition" class="btn-primary" id="feature-exp-btn">Experience the Feature</a>
+        <a href="#collection" class="btn-secondary" id="feature-view-btn">View Details</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       ACQUISITION
+  ══════════════════════════════════════ -->
+  <section id="acquisition" aria-label="Private Acquisition Room">
+    <div class="acq-inner">
+      <div class="room-label reveal">Private Acquisition Room</div>
+      <h2 class="acq-hl reveal d1">Some Things Are Not<br/><em class="gold-gradient">Left in the Hallway.</em></h2>
+      <p class="acq-sup reveal d2">
+        Request early access to private releases, limited acquisitions, unreleased work, 
+        invitations, and direct correspondence from the residence.
+      </p>
+
+      <form class="acq-form reveal d3" id="acqForm" onsubmit="handleSubmit(event)">
+        <input class="acq-input" id="acq-name" type="text" name="name" placeholder="Name" required autocomplete="name"/>
+        <input class="acq-input" id="acq-email" type="email" name="email" placeholder="Email Address" required autocomplete="email"/>
+        <div>
+          <label class="int-label">Area of Interest</label>
+          <div class="int-grid">
+            <label class="int-opt"><input type="checkbox" id="int-garments" name="interest" value="garments"/><span>Garments</span></label>
+            <label class="int-opt"><input type="checkbox" id="int-music" name="interest" value="music"/><span>Music</span></label>
+            <label class="int-opt"><input type="checkbox" id="int-fragrance" name="interest" value="fragrance"/><span>Fragrance &amp; Objects</span></label>
+            <label class="int-opt"><input type="checkbox" id="int-archive" name="interest" value="archive"/><span>Art &amp; Archive</span></label>
+            <label class="int-opt"><input type="checkbox" id="int-pro" name="interest" value="professional"/><span>Professional Inquiry</span></label>
+            <label class="int-opt"><input type="checkbox" id="int-private" name="interest" value="private"/><span>Private Release Access</span></label>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit" id="acq-submit-btn">Request Entry</button>
+      </form>
+
+      <div class="form-confirm" id="formConfirm" role="alert">
+        <p class="confirm-msg">"Your name has been entered into<br/>the residence ledger."</p>
+        <svg class="confirm-sig-mark" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(28, 0)">
+            <path d="M4 28 L4 14 L14 22 L24 8 L34 22 L44 14 L44 28 Z" fill="url(#goldGrad)"/>
+            <rect x="2" y="26" width="44" height="4" rx="1" fill="url(#goldGrad)"/>
+            <circle cx="4" cy="14" r="2" fill="url(#goldGrad)"/>
+            <circle cx="24" cy="8" r="2.5" fill="url(#goldGrad)"/>
+            <circle cx="44" cy="14" r="2" fill="url(#goldGrad)"/>
+          </g>
+          <text x="10" y="130" font-family="Great Vibes, cursive" font-size="120" fill="url(#goldGrad)" letter-spacing="-2">KingShadP</text>
+          <path d="M10 148 Q200 156 490 144" stroke="url(#goldGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M482 138 L494 148 L486 148 L498 162" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer id="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg style="height:42px;width:auto;" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(28,0)">
+            <path d="M4 28 L4 14 L14 22 L24 8 L34 22 L44 14 L44 28 Z" fill="url(#goldGrad)"/>
+            <rect x="2" y="26" width="44" height="4" rx="1" fill="url(#goldGrad)"/>
+            <circle cx="4" cy="14" r="2" fill="url(#goldGrad)"/>
+            <circle cx="24" cy="8" r="2.5" fill="url(#goldGrad)"/>
+            <circle cx="44" cy="14" r="2" fill="url(#goldGrad)"/>
+          </g>
+          <text x="10" y="130" font-family="Great Vibes, cursive" font-size="120" fill="url(#goldGrad)" letter-spacing="-2">KingShadP</text>
+          <path d="M10 148 Q200 156 490 144" stroke="url(#goldGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M482 138 L494 148 L486 148 L498 162" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="footer-tag">Private House of Sound,<br/>Objects, Garments, and Image.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Rooms</h4>
+        <ul>
+          <li><a href="#hero">Residence</a></li>
+          <li><a href="#collection">Collection</a></li>
+          <li><a href="#listening">Sound</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#objects">Objects</a></li>
+          <li><a href="#archive">Archive</a></li>
+          <li><a href="#study">Owner</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Beyond the Residence</h4>
+        <ul>
+          <li><a href="#footer" id="ft-ig">Instagram</a></li>
+          <li><a href="#footer" id="ft-yt">YouTube</a></li>
+          <li><a href="#footer" id="ft-sp">Spotify</a></li>
+          <li><a href="#footer" id="ft-am">Apple Music</a></li>
+          <li><a href="#acquisition" id="ft-em">Private Correspondence</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-final">Everything within this address is created, directed, or authorized by KingShadP. The Giragon is the mark of the house.</p>
+      <div class="footer-copy">
+        <span style="display:block">© 2026 KingShadP</span>
+        <span>All Rooms Reserved</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════ -->
+  <script>
+    /* ARRIVAL */
+    const arrival = document.getElementById('arrival');
+    setTimeout(() => arrival.classList.add('show-bg'), 400);
+    setTimeout(() => arrival.classList.add('open'), 2900);
+    setTimeout(() => {
+      arrival.classList.add('done');
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('v'));
+    }, 4200);
+
+    /* SCROLL REVEAL */
+    const ro = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('v'); ro.unobserve(e.target); }
+      });
+    }, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    /* NAV COMPRESS */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 80), { passive: true });
+
+    /* HERO PARALLAX */
+    const heroBg = document.getElementById('heroBg');
+    const heroEl = document.getElementById('hero');
+    heroEl.addEventListener('mousemove', e => {
+      const r = heroEl.getBoundingClientRect();
+      const dx = (e.clientX - r.left - r.width/2) / (r.width/2);
+      const dy = (e.clientY - r.top - r.height/2) / (r.height/2);
+      heroBg.style.transform = `translate(${dx * -14}px, ${dy * -9}px) scale(1.06)`;
+    });
+    heroEl.addEventListener('mouseleave', () => { heroBg.style.transform = 'translate(0,0) scale(1.06)'; });
+
+    /* FEATURE SCROLL PARALLAX */
+    const featureBg = document.getElementById('featureBg');
+    window.addEventListener('scroll', () => {
+      const r = document.getElementById('feature').getBoundingClientRect();
+      if (featureBg) featureBg.style.transform = `translateY(${-r.top * .12}px)`;
+    }, { passive: true });
+
+    /* GALLERY DRAG */
+    const gt = document.getElementById('galleryTrack');
+    let drag = false, sx, sl;
+    gt.addEventListener('mousedown', e => { drag = true; sx = e.pageX - gt.offsetLeft; sl = gt.scrollLeft; });
+    gt.addEventListener('mouseleave', () => drag = false);
+    gt.addEventListener('mouseup', () => drag = false);
+    gt.addEventListener('mousemove', e => {
+      if (!drag) return; e.preventDefault();
+      gt.scrollLeft = sl - (e.pageX - gt.offsetLeft - sx) * 1.2;
+    });
+
+    /* ARCHIVE DRAWERS */
+    function toggleDrawer(id) {
+      const d = document.getElementById(id);
+      const wasOpen = d.classList.contains('open');
+      document.querySelectorAll('.drawer').forEach(x => {
+        x.classList.remove('open');
+        x.querySelector('.drawer-head').setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen) {
+        d.classList.add('open');
+        d.querySelector('.drawer-head').setAttribute('aria-expanded', 'true');
+      }
+    }
+    document.querySelectorAll('.drawer-head').forEach(h => {
+      h.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); h.click(); }
+      });
+    });
+
+    /* AUDIO PLAYER */
+    const playBtn = document.getElementById('playBtn');
+    const playIco = document.getElementById('playIco');
+    const pauseIco = document.getElementById('pauseIco');
+    const progFill = document.getElementById('progFill');
+    const progBar = document.getElementById('progBar');
+    const elapsedEl = document.getElementById('elapsed');
+    let playing = false, progress = 0, iv = null;
+    const totalSec = 221;
+    const fmt = s => `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playIco.style.display = playing ? 'none' : 'block';
+      pauseIco.style.display = playing ? 'block' : 'none';
+      if (playing) {
+        iv = setInterval(() => {
+          progress = Math.min(progress + 100/totalSec, 100);
+          progFill.style.width = progress + '%';
+          elapsedEl.textContent = fmt((progress/100)*totalSec);
+          progBar.setAttribute('aria-valuenow', Math.round(progress));
+          if (progress >= 100) {
+            clearInterval(iv); playing = false;
+            playIco.style.display = 'block'; pauseIco.style.display = 'none';
+            progress = 0; progFill.style.width = '0%'; elapsedEl.textContent = '00:00';
+          }
+        }, 1000);
+      } else { clearInterval(iv); }
+    });
+
+    progBar.addEventListener('click', e => {
+      const r = progBar.getBoundingClientRect();
+      progress = ((e.clientX - r.left) / r.width) * 100;
+      progFill.style.width = progress + '%';
+      elapsedEl.textContent = fmt((progress/100)*totalSec);
+    });
+
+    /* FORM */
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('acqForm').style.display = 'none';
+      document.getElementById('formConfirm').classList.add('v');
+    }
+  </script>
+</body>
+</html>
