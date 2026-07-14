@@ -1,9 +1,9 @@
 {
-  "redirects": [
+  "version": 2,
+  "routes": [
     {
-      "source": "/",
-      "destination": "/kingshadp-residence/",
-      "permanent": false
+      "src": "/(.*)",
+      "dest": "/api/index.js"
     }
   ]
 }
