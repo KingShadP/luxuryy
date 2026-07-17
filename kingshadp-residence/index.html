@@ -1307,8 +1307,8 @@
       </p>
 
       <form class="acq-form reveal d3" id="acqForm" onsubmit="handleSubmit(event)">
-        <input class="acq-input" id="acq-name" type="text" name="name" placeholder="Name" required autocomplete="name"/>
-        <input class="acq-input" id="acq-email" type="email" name="email" placeholder="Email Address" required autocomplete="email"/>
+        <input class="acq-input" id="acq-name" type="text" name="name" placeholder="Name" required autocomplete="name" aria-label="Name"/>
+        <input class="acq-input" id="acq-email" type="email" name="email" placeholder="Email Address" required autocomplete="email" aria-label="Email Address"/>
         <div>
           <label class="int-label">Area of Interest</label>
           <div class="int-grid">
@@ -1352,7 +1352,7 @@
       <h2 class="intel-title">Consult the House<em class="gold-gradient">Mind.</em></h2>
       <p class="intel-sub">Ask for strategy, archive synthesis, campaign ideas, or next steps. Enable High Thinking for deeper structured reasoning.</p>
       <form class="intel-form" id="intelligenceForm">
-        <textarea class="intel-prompt" id="intelligencePrompt" placeholder="Ask the Residence Intelligence..." required></textarea>
+        <textarea class="intel-prompt" id="intelligencePrompt" placeholder="Ask the Residence Intelligence..." required aria-label="Ask the Residence Intelligence"></textarea>
         <div class="intel-actions">
           <label class="intel-toggle"><input type="checkbox" id="highThinkingToggle"/> High Thinking</label>
           <button type="submit" class="btn-submit" id="intelligenceSendBtn" style="max-width:260px;">Request Intelligence</button>
