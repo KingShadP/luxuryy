@@ -114,4 +114,21 @@ test('API stores submissions and handles high-thinking AI sessions', async (t) =
   assert.equal(history.body.messages.length, 2);
   assert.equal(history.body.messages[0].role, 'user');
   assert.equal(history.body.messages[1].role, 'assistant');
+
+  const followUp = await requestJSON(port, 'POST', '/api/ai/chat', {
+    prompt: 'Continue',
+    highThinking: false,
+    sessionId: chat.body.sessionId,
+  });
+
+  assert.equal(followUp.status, 200);
+  assert.equal(followUp.body.sessionId, chat.body.sessionId);
+  assert.equal(geminiCalls.length, 2);
+
+  const followUpPayload = JSON.parse(geminiCalls[1].options.body);
+  assert.equal(followUpPayload.contents[0].role, 'user');
+  assert.equal(followUpPayload.contents[0].parts[0].text, 'Summarize this house strategy');
+  assert.equal(followUpPayload.contents[1].role, 'model');
+  assert.equal(followUpPayload.contents[1].parts[0].text, 'Residence intelligence response.');
+  assert.equal(followUpPayload.contents[2].parts[0].text, 'Continue');
 });

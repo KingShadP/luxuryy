@@ -160,6 +160,7 @@ async function initializeDatabase() {
   `);
 
   await run('CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id, created_at)');
+  await run('CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id, id)');
   await run('CREATE INDEX IF NOT EXISTS idx_submissions_created_at ON acquisition_submissions(created_at DESC)');
 }
 
