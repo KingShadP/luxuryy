@@ -1451,19 +1451,55 @@
     /* HERO PARALLAX */
     const heroBg = document.getElementById('heroBg');
     const heroEl = document.getElementById('hero');
-    heroEl.addEventListener('mousemove', e => {
-      const r = heroEl.getBoundingClientRect();
-      const dx = (e.clientX - r.left - r.width/2) / (r.width/2);
-      const dy = (e.clientY - r.top - r.height/2) / (r.height/2);
+    let heroRect = null;
+    let heroMouseFrame = null;
+    let heroMouseEvent = null;
+
+    const updateHeroRect = () => {
+      heroRect = heroEl.getBoundingClientRect();
+    };
+
+    const renderHeroParallax = () => {
+      if (!heroMouseEvent || !heroRect) {
+        heroMouseFrame = null;
+        return;
+      }
+      const dx = (heroMouseEvent.clientX - heroRect.left - heroRect.width / 2) / (heroRect.width / 2);
+      const dy = (heroMouseEvent.clientY - heroRect.top - heroRect.height / 2) / (heroRect.height / 2);
       heroBg.style.transform = `translate(${dx * -14}px, ${dy * -9}px) scale(1.06)`;
+      heroMouseFrame = null;
+    };
+
+    updateHeroRect();
+    window.addEventListener('resize', updateHeroRect, { passive: true });
+    heroEl.addEventListener('mousemove', (e) => {
+      heroMouseEvent = e;
+      if (!heroMouseFrame) {
+        heroMouseFrame = requestAnimationFrame(renderHeroParallax);
+      }
     });
-    heroEl.addEventListener('mouseleave', () => { heroBg.style.transform = 'translate(0,0) scale(1.06)'; });
+    heroEl.addEventListener('mouseleave', () => {
+      heroMouseEvent = null;
+      heroBg.style.transform = 'translate(0,0) scale(1.06)';
+    });
 
     /* FEATURE SCROLL PARALLAX */
     const featureBg = document.getElementById('featureBg');
+    const featureEl = document.getElementById('feature');
+    let featureScrollFrame = null;
+
+    const updateFeatureParallax = () => {
+      if (featureBg && featureEl) {
+        const r = featureEl.getBoundingClientRect();
+        featureBg.style.transform = `translateY(${-r.top * .12}px)`;
+      }
+      featureScrollFrame = null;
+    };
+
     window.addEventListener('scroll', () => {
-      const r = document.getElementById('feature').getBoundingClientRect();
-      if (featureBg) featureBg.style.transform = `translateY(${-r.top * .12}px)`;
+      if (!featureScrollFrame) {
+        featureScrollFrame = requestAnimationFrame(updateFeatureParallax);
+      }
     }, { passive: true });
 
     /* GALLERY DRAG */
