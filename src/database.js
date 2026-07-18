@@ -1,16 +1,81 @@
 const path = require('path');
 const fs = require('fs');
-const sqlite3 = require('sqlite3');
+
+let sqlite3;
+let sqliteLoadError;
+let sqliteCore;
+let sqliteCoreLoadError;
+let databaseInitError;
+let databaseMode;
+
+try {
+  sqlite3 = require('sqlite3');
+} catch (error) {
+  sqliteLoadError = error;
+}
+
+try {
+  sqliteCore = require('node:sqlite');
+} catch (error) {
+  sqliteCoreLoadError = error;
+}
 
 const dbPath = path.resolve(process.cwd(), process.env.DB_PATH || './data/residence.db');
-fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+let db;
 
-const db = new sqlite3.Database(dbPath);
-db.exec('PRAGMA foreign_keys = ON;');
+try {
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+
+  if (!sqliteLoadError) {
+    db = new sqlite3.Database(dbPath);
+    db.exec('PRAGMA foreign_keys = ON;');
+    databaseMode = 'sqlite3';
+  } else if (!sqliteCoreLoadError) {
+    db = new sqliteCore.DatabaseSync(dbPath);
+    db.exec('PRAGMA foreign_keys = ON;');
+    databaseMode = 'node:sqlite';
+  }
+} catch (error) {
+  databaseInitError = error;
+}
+
+function getDatabaseOrThrow() {
+  if (databaseInitError) {
+    const error = new Error(`SQLite database initialization failed: ${databaseInitError.message}`);
+    error.cause = databaseInitError;
+    throw error;
+  }
+
+  if (!db) {
+    const details = [sqliteLoadError, sqliteCoreLoadError]
+      .filter(Boolean)
+      .map((error) => error.message)
+      .join('; ');
+    const message = `SQLite drivers failed to load in this runtime: ${details || 'unknown error'}`;
+    const error = new Error(message);
+    error.cause = sqliteLoadError || sqliteCoreLoadError;
+    throw error;
+  }
+
+  return db;
+}
 
 function run(sql, params = []) {
+  if (databaseMode === 'node:sqlite') {
+    return Promise.resolve().then(() => {
+      const database = getDatabaseOrThrow();
+      const statement = database.prepare(sql);
+      const result = statement.run(...params);
+      return {
+        id: Number(result.lastInsertRowid || 0),
+        changes: Number(result.changes || 0),
+      };
+    });
+  }
+
   return new Promise((resolve, reject) => {
-    db.run(sql, params, function onRun(error) {
+    const database = getDatabaseOrThrow();
+    database.run(sql, params, function onRun(error) {
       if (error) {
         reject(error);
         return;
@@ -21,8 +86,17 @@ function run(sql, params = []) {
 }
 
 function get(sql, params = []) {
+  if (databaseMode === 'node:sqlite') {
+    return Promise.resolve().then(() => {
+      const database = getDatabaseOrThrow();
+      const statement = database.prepare(sql);
+      return statement.get(...params);
+    });
+  }
+
   return new Promise((resolve, reject) => {
-    db.get(sql, params, (error, row) => {
+    const database = getDatabaseOrThrow();
+    database.get(sql, params, (error, row) => {
       if (error) {
         reject(error);
         return;
@@ -33,8 +107,17 @@ function get(sql, params = []) {
 }
 
 function all(sql, params = []) {
+  if (databaseMode === 'node:sqlite') {
+    return Promise.resolve().then(() => {
+      const database = getDatabaseOrThrow();
+      const statement = database.prepare(sql);
+      return statement.all(...params);
+    });
+  }
+
   return new Promise((resolve, reject) => {
-    db.all(sql, params, (error, rows) => {
+    const database = getDatabaseOrThrow();
+    database.all(sql, params, (error, rows) => {
       if (error) {
         reject(error);
         return;
