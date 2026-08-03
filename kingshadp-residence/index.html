@@ -769,7 +769,7 @@
       · Crown on head
       · Filigree arabesque engraving texture
       This SVG approximates those proportions for use as a logo mark.
-      For photographic use, replace asset images with owner-provided photos.
+      All photographic media now uses curated in-folder assets.
     -->
     <!-- KingShadP Wordmark SVG: Crown + Script + Lightning -->
       <svg class="ksp-wordmark-svg display" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="KingShadP">
@@ -960,7 +960,7 @@
 
       <div class="col-panel reveal d1">
         <div class="panel-img">
-          <img src="assets/collection2.jpg" alt="The Giragon Collection" loading="lazy"/>
+          <img src="assets/giragon_full_spotlight.png" alt="The Giragon Collection" loading="lazy"/>
           <div class="panel-grad"></div>
         </div>
         <div class="panel-info">
@@ -1307,8 +1307,8 @@
       </p>
 
       <form class="acq-form reveal d3" id="acqForm" onsubmit="handleSubmit(event)">
-        <input class="acq-input" id="acq-name" type="text" name="name" placeholder="Name" required autocomplete="name"/>
-        <input class="acq-input" id="acq-email" type="email" name="email" placeholder="Email Address" required autocomplete="email"/>
+        <input class="acq-input" id="acq-name" type="text" name="name" placeholder="Name" required autocomplete="name" aria-label="Name"/>
+        <input class="acq-input" id="acq-email" type="email" name="email" placeholder="Email Address" required autocomplete="email" aria-label="Email Address"/>
         <div>
           <label class="int-label">Area of Interest</label>
           <div class="int-grid">
@@ -1352,7 +1352,7 @@
       <h2 class="intel-title">Consult the House<em class="gold-gradient">Mind.</em></h2>
       <p class="intel-sub">Ask for strategy, archive synthesis, campaign ideas, or next steps. Enable High Thinking for deeper structured reasoning.</p>
       <form class="intel-form" id="intelligenceForm">
-        <textarea class="intel-prompt" id="intelligencePrompt" placeholder="Ask the Residence Intelligence..." required></textarea>
+        <textarea class="intel-prompt" id="intelligencePrompt" placeholder="Ask the Residence Intelligence..." required aria-label="Ask the Residence Intelligence"></textarea>
         <div class="intel-actions">
           <label class="intel-toggle"><input type="checkbox" id="highThinkingToggle"/> High Thinking</label>
           <button type="submit" class="btn-submit" id="intelligenceSendBtn" style="max-width:260px;">Request Intelligence</button>
@@ -1451,19 +1451,55 @@
     /* HERO PARALLAX */
     const heroBg = document.getElementById('heroBg');
     const heroEl = document.getElementById('hero');
-    heroEl.addEventListener('mousemove', e => {
-      const r = heroEl.getBoundingClientRect();
-      const dx = (e.clientX - r.left - r.width/2) / (r.width/2);
-      const dy = (e.clientY - r.top - r.height/2) / (r.height/2);
+    let heroRect = null;
+    let heroMouseFrame = null;
+    let heroMouseEvent = null;
+
+    const updateHeroRect = () => {
+      heroRect = heroEl.getBoundingClientRect();
+    };
+
+    const renderHeroParallax = () => {
+      if (!heroMouseEvent || !heroRect) {
+        heroMouseFrame = null;
+        return;
+      }
+      const dx = (heroMouseEvent.clientX - heroRect.left - heroRect.width / 2) / (heroRect.width / 2);
+      const dy = (heroMouseEvent.clientY - heroRect.top - heroRect.height / 2) / (heroRect.height / 2);
       heroBg.style.transform = `translate(${dx * -14}px, ${dy * -9}px) scale(1.06)`;
+      heroMouseFrame = null;
+    };
+
+    updateHeroRect();
+    window.addEventListener('resize', updateHeroRect, { passive: true });
+    heroEl.addEventListener('mousemove', (e) => {
+      heroMouseEvent = e;
+      if (!heroMouseFrame) {
+        heroMouseFrame = requestAnimationFrame(renderHeroParallax);
+      }
     });
-    heroEl.addEventListener('mouseleave', () => { heroBg.style.transform = 'translate(0,0) scale(1.06)'; });
+    heroEl.addEventListener('mouseleave', () => {
+      heroMouseEvent = null;
+      heroBg.style.transform = 'translate(0,0) scale(1.06)';
+    });
 
     /* FEATURE SCROLL PARALLAX */
     const featureBg = document.getElementById('featureBg');
+    const featureEl = document.getElementById('feature');
+    let featureScrollFrame = null;
+
+    const updateFeatureParallax = () => {
+      if (featureBg && featureEl) {
+        const r = featureEl.getBoundingClientRect();
+        featureBg.style.transform = `translateY(${-r.top * .12}px)`;
+      }
+      featureScrollFrame = null;
+    };
+
     window.addEventListener('scroll', () => {
-      const r = document.getElementById('feature').getBoundingClientRect();
-      if (featureBg) featureBg.style.transform = `translateY(${-r.top * .12}px)`;
+      if (!featureScrollFrame) {
+        featureScrollFrame = requestAnimationFrame(updateFeatureParallax);
+      }
     }, { passive: true });
 
     /* GALLERY DRAG */

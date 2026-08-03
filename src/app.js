@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { initializeDatabase, run, all, get } = require('./database');
+const { initializeDatabase, run, all } = require('./database');
 const { validateSubmission, validatePrompt } = require('./validation');
 const { generateIntelligence } = require('./gemini');
 
@@ -82,16 +82,25 @@ function createApp() {
       const { prompt, highThinking, sessionId: incomingSessionId } = validatePrompt(req.body);
       const sessionId = incomingSessionId || crypto.randomUUID();
 
-      const existingSession = await get('SELECT id FROM chat_sessions WHERE id = ?', [sessionId]);
-
-      if (!existingSession) {
-        await run('INSERT INTO chat_sessions(id, high_thinking_default) VALUES (?, ?)', [sessionId, highThinking ? 1 : 0]);
-      } else {
-        await run('UPDATE chat_sessions SET high_thinking_default = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [highThinking ? 1 : 0, sessionId]);
-      }
+      await run(
+        `INSERT INTO chat_sessions(id, high_thinking_default, updated_at)
+         VALUES (?, ?, CURRENT_TIMESTAMP)
+         ON CONFLICT(id) DO UPDATE
+         SET high_thinking_default = excluded.high_thinking_default,
+             updated_at = CURRENT_TIMESTAMP`,
+        [sessionId, highThinking ? 1 : 0],
+      );
 
       const contextMessages = await all(
-        'SELECT role, content FROM chat_messages WHERE session_id = ? ORDER BY id DESC LIMIT 8',
+        `SELECT role, content
+         FROM (
+           SELECT id, role, content
+           FROM chat_messages
+           WHERE session_id = ?
+           ORDER BY id DESC
+           LIMIT 8
+         )
+         ORDER BY id ASC`,
         [sessionId],
       );
 
@@ -101,7 +110,7 @@ function createApp() {
       );
 
       const reply = await generateIntelligence({
-        messages: contextMessages.reverse(),
+        messages: contextMessages,
         prompt,
         highThinking,
       });
